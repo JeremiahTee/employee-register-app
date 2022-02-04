@@ -13,8 +13,9 @@ const initialFieldValues = {
   imageFile: null,
 };
 
-export const Employee = () => {
+export const Employee = ({ addOrEdit }) => {
   const [values, setValues] = useState(initialFieldValues);
+  const [errors, setErrors] = useState({});
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -45,12 +46,42 @@ export const Employee = () => {
     }
   };
 
+  const validate = () => {
+    let temp = {};
+    temp.employeeName = values.employeeName === '' ? false : true;
+    temp.imageSrc = values.imageSrc === defaultImageSrc ? false : true;
+    setErrors(temp);
+    return Object.values(temp).every((x) => x === true);
+  };
+
+  const resetForm = () => {
+    setValues(initialFieldValues);
+    document.getElementById('image-uploader').value = null;
+    setErrors({});
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    if (validate()) {
+      const formData = new FormData();
+      formData.append('employeeId', values.employeeId);
+      formData.append('employeeName', values.employeeName);
+      formData.append('occupation', values.occupation);
+      formData.append('imageName', values.imageName);
+      formData.append('imageFile', values.imageFile);
+      addOrEdit(formData, resetForm);
+    }
+  };
+
+  const applyErrorClass = (field) =>
+    field in errors && errors[field] === false ? ' invalid-field' : '';
+
   return (
     <>
       <div className='container text-center'>
         <p className='lead'>Employee</p>
       </div>
-      <form autoComplete='off' noValidate>
+      <form autoComplete='off' noValidate onSubmit={handleFormSubmit}>
         <div className='card'>
           <img src={values.imageSrc} className='card-img-top' alt='employee' />
           <div className='card-body'></div>
@@ -58,12 +89,14 @@ export const Employee = () => {
             <input
               type='file'
               accept='image/*'
-              className='form-control-file'
+              className={'form-control-file' + applyErrorClass('imageSrc')}
               onChange={showPreview}
+              id='image-uploader'
             ></input>
           </FormGroup>
           <FormGroup>
             <FormControl
+              className={'form-control' + applyErrorClass('employeeName')}
               placeholder={'Employee Name'}
               name='employeeName'
               value={values.employeeName}
@@ -75,6 +108,11 @@ export const Employee = () => {
               value={values.occupation}
               onChange={handleInputChange}
             ></FormControl>
+            <FormGroup className='text-center'>
+              <button type='submit' className='btn btn-light'>
+                Submit
+              </button>
+            </FormGroup>
           </FormGroup>
         </div>
       </form>
