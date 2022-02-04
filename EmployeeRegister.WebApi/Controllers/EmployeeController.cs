@@ -15,10 +15,12 @@ namespace EmployeeRegister.WebApi.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly EmployeeDbContext _context;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public EmployeeController(EmployeeDbContext context)
+        public EmployeeController(EmployeeDbContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
+            _hostEnvironment = hostEnvironment;
         }
 
         // GET: api/Employee
@@ -76,8 +78,9 @@ namespace EmployeeRegister.WebApi.Controllers
         // POST: api/Employee
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<EmployeeModel>> PostEmployeeModel(EmployeeModel employeeModel)
+        public async Task<ActionResult<EmployeeModel>> PostEmployeeModel([FromForm] EmployeeModel employeeModel)
         {
+            employeeModel.ImageName = await SaveImage(employeeModel.ImageFile);
             _context.Employees.Add(employeeModel);
             await _context.SaveChangesAsync();
 
@@ -103,6 +106,24 @@ namespace EmployeeRegister.WebApi.Controllers
         private bool EmployeeModelExists(int id)
         {
             return _context.Employees.Any(e => e.EmployeeId == id);
+        }
+
+        [NonAction]
+        public async Task<string> SaveImage(IFormFile imageFile)
+        {
+            string imageName = new String(Path.GetFileNameWithoutExtension(imageFile.FileName)
+                .Take(10) // take first 10 characters
+                .ToArray())
+                .Replace(' ',
+                    '-');
+            imageName = imageName + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(imageFile.FileName);
+            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, "Images", imageName);
+            using (var fileStream = new FileStream(imagePath, FileMode.Create))
+            {
+                await imageFile.CopyToAsync(fileStream);
+            }
+
+            return imageName;
         }
     }
 }
