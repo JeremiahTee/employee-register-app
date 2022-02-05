@@ -6,7 +6,7 @@ namespace EmployeeRegister.WebApi.Models
     public class EmployeeModel
     {
         [Key]
-        public int EmployeeId { get; set; }
+        public int EmployeeID { get; set; }
 
         [Column(TypeName = "nvarchar(50)")]
         public string? EmployeeName { get; set; }

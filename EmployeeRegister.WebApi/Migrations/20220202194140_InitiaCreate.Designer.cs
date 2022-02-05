@@ -25,11 +25,11 @@ namespace EmployeeRegister.WebApi.Migrations
 
             modelBuilder.Entity("EmployeeRegister.WebApi.Models.EmployeeModel", b =>
                 {
-                    b.Property<int>("EmployeeId")
+                    b.Property<int>("EmployeeID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmployeeId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmployeeID"), 1L, 1);
 
                     b.Property<string>("EmployeeName")
                         .IsRequired()
@@ -43,7 +43,7 @@ namespace EmployeeRegister.WebApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("EmployeeId");
+                    b.HasKey("EmployeeID");
 
                     b.ToTable("Employees");
                 });
