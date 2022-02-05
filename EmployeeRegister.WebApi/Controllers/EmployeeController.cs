@@ -113,6 +113,7 @@ namespace EmployeeRegister.WebApi.Controllers
                 return NotFound();
             }
 
+            DeleteImage(employeeModel.ImageName);
             _context.Employees.Remove(employeeModel);
             await _context.SaveChangesAsync();
 

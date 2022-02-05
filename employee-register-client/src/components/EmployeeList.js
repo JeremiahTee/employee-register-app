@@ -12,7 +12,7 @@ export const EmployeeList = () => {
       fetchAll: () => axios.get(url),
       create: (newRecord) => axios.post(url, newRecord),
       update: (id, updateRecord) => axios.put(url + '/' + id, updateRecord),
-      delete: (id) => axios.delete(url + id),
+      delete: (id) => axios.delete(url + '/' + id),
     };
   };
 
@@ -55,6 +55,15 @@ export const EmployeeList = () => {
     setRecordForEdit(data);
   };
 
+  const onDelete = (e, id) => {
+    e.stopPropagation();
+    if (window.confirm('Are you sure to delete this employee?'))
+      employeeAPI()
+        .delete(id)
+        .then((res) => refreshEmployeeList())
+        .catch((err) => console.log(err));
+  };
+
   const imageCard = (data) => (
     <div className='card' onClick={() => showRecordDetails(data)}>
       <img
@@ -64,7 +73,13 @@ export const EmployeeList = () => {
       />
       <div className='card-body'>
         <h5>{data.employeeName}</h5>
-        <span>{data.occupation}</span>
+        <span>{data.occupation}</span> <br></br>
+        <button
+          className='btn btn-light delete-button'
+          onClick={(e) => onDelete(e, parseInt(data.employeeID))}
+        >
+          <i className='far fa-trash-alt'></i>
+        </button>
       </div>
     </div>
   );
