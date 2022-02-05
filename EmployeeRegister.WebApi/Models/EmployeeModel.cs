@@ -18,9 +18,9 @@ namespace EmployeeRegister.WebApi.Models
         public string? ImageName { get; set; }
 
         [NotMapped]
-        public IFormFile ImageFile { get; set; }
+        public IFormFile? ImageFile { get; set; }
 
         [NotMapped]
-        public string ImageSrc { get; set; }
+        public string? ImageSrc { get; set; }
     }
 }

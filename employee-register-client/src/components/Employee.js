@@ -75,7 +75,6 @@ export const Employee = ({ addOrEdit, recordForEdit }) => {
       formData.append('occupation', values.occupation);
       formData.append('imageName', values.imageName);
       formData.append('imageFile', values.imageFile);
-      formData.append('imageSrc', values.imageSrc);
       addOrEdit(formData, resetForm);
     }
   };

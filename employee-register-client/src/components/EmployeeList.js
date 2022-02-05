@@ -11,7 +11,7 @@ export const EmployeeList = () => {
     return {
       fetchAll: () => axios.get(url),
       create: (newRecord) => axios.post(url, newRecord),
-      update: (id, updateRecord) => axios.put(url + id, updateRecord),
+      update: (id, updateRecord) => axios.put(url + '/' + id, updateRecord),
       delete: (id) => axios.delete(url + id),
     };
   };
@@ -20,11 +20,6 @@ export const EmployeeList = () => {
     employeeAPI()
       .fetchAll()
       .then((res) => {
-        console.log(
-          `Res.data: ${JSON.stringify(
-            res.data
-          )} of type: ${typeof JSON.stringify(res.data)}`
-        );
         setEmployeeList(res.data);
       })
       .catch((err) => console.log(err));
@@ -36,13 +31,24 @@ export const EmployeeList = () => {
 
   // Consume WebApi methods for insert/update image operations
   const addOrEdit = (formData, onSuccess) => {
-    employeeAPI()
-      .create(formData)
-      .then((res) => {
-        onSuccess();
-        refreshEmployeeList();
-      })
-      .catch((err) => console.log(err));
+    if (formData.get('employeeID') === '0') {
+      // first insert is always id = 0 due to initial state
+      employeeAPI()
+        .create(formData)
+        .then((res) => {
+          onSuccess();
+          refreshEmployeeList();
+        })
+        .catch((err) => console.log(err));
+    } else {
+      employeeAPI()
+        .update(formData.get('employeeID'), formData)
+        .then((res) => {
+          onSuccess();
+          refreshEmployeeList();
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   const showRecordDetails = (data) => {

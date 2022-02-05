@@ -57,11 +57,17 @@ namespace EmployeeRegister.WebApi.Controllers
         // PUT: api/Employee/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEmployeeModel(int id, EmployeeModel employeeModel)
+        public async Task<IActionResult> PutEmployeeModel(int id, [FromForm] EmployeeModel employeeModel)
         {
             if (id != employeeModel.EmployeeID)
             {
                 return BadRequest();
+            }
+
+            if (employeeModel.ImageFile != null)
+            {
+                DeleteImage(employeeModel.ImageName);
+                employeeModel.ImageName = await SaveImage(employeeModel.ImageFile);
             }
 
             _context.Entry(employeeModel).State = EntityState.Modified;
@@ -134,6 +140,14 @@ namespace EmployeeRegister.WebApi.Controllers
             }
 
             return imageName;
+        }
+
+        [NonAction]
+        public void DeleteImage(string imageName)
+        {
+            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, "Images", imageName);
+            if (System.IO.File.Exists(imagePath))
+                System.IO.File.Delete(imagePath);
         }
     }
 }
