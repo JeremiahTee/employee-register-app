@@ -32,6 +32,7 @@ namespace EmployeeRegister.WebApi.Controllers
                 {
                     EmployeeID = x.EmployeeID,
                     EmployeeName = x.EmployeeName,
+                    Occupation = x.Occupation,
                     ImageName = x.ImageName,
                     ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, x.ImageName)
                     // Request.Scheme = https, Request.Host = localhost + port number
