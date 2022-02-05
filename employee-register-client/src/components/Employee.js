@@ -13,9 +13,15 @@ const initialFieldValues = {
   imageFile: null,
 };
 
-export const Employee = ({ addOrEdit }) => {
+export const Employee = ({ addOrEdit, recordForEdit }) => {
   const [values, setValues] = useState(initialFieldValues);
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    if (recordForEdit != null) {
+      setValues(recordForEdit);
+    }
+  }, [recordForEdit]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Employee } from './Employee';
 import { Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 
 export const EmployeeList = () => {
   const [employeeList, setEmployeeList] = useState([]);
+  const [recordForEdit, setRecordForEdit] = useState(null);
 
   const employeeAPI = (url = 'https://localhost:7279/api/Employee') => {
     return {
@@ -15,7 +16,7 @@ export const EmployeeList = () => {
     };
   };
 
-  const refreshEmployeeList = () => {
+  const refreshEmployeeList = useCallback(() => {
     employeeAPI()
       .fetchAll()
       .then((res) => {
@@ -25,16 +26,13 @@ export const EmployeeList = () => {
           )} of type: ${typeof JSON.stringify(res.data)}`
         );
         setEmployeeList(res.data);
-        console.log(
-          `EmployeeList: ${employeeList} of type: ${typeof employeeList}`
-        );
       })
       .catch((err) => console.log(err));
-  };
+  }, []);
 
   useEffect(() => {
     refreshEmployeeList();
-  }, []);
+  }, [refreshEmployeeList]);
 
   // Consume WebApi methods for insert/update image operations
   const addOrEdit = (formData, onSuccess) => {
@@ -47,8 +45,12 @@ export const EmployeeList = () => {
       .catch((err) => console.log(err));
   };
 
+  const showRecordDetails = (data) => {
+    setRecordForEdit(data);
+  };
+
   const imageCard = (data) => (
-    <div className='card'>
+    <div className='card' onClick={() => showRecordDetails(data)}>
       <img
         src={data.imageSrc}
         className='card-img-top rounded'
@@ -67,7 +69,7 @@ export const EmployeeList = () => {
         <h2 className='text-center'>Employee Register</h2>
       </Container>
       <Col md={4}>
-        <Employee addOrEdit={addOrEdit} />
+        <Employee addOrEdit={addOrEdit} recordForEdit={recordForEdit} />
       </Col>
       <Col md={8}>
         <table>
