@@ -30,7 +30,7 @@ namespace EmployeeRegister.WebApi.Controllers
             return await _context.Employees
                 .Select(x => new EmployeeModel()
                 {
-                    EmployeeId = x.EmployeeId,
+                    EmployeeID = x.EmployeeID,
                     EmployeeName = x.EmployeeName,
                     ImageName = x.ImageName,
                     ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, x.ImageName)
@@ -58,7 +58,7 @@ namespace EmployeeRegister.WebApi.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEmployeeModel(int id, EmployeeModel employeeModel)
         {
-            if (id != employeeModel.EmployeeId)
+            if (id != employeeModel.EmployeeID)
             {
                 return BadRequest();
             }
@@ -93,7 +93,7 @@ namespace EmployeeRegister.WebApi.Controllers
             _context.Employees.Add(employeeModel);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetEmployeeModel", new { id = employeeModel.EmployeeId }, employeeModel);
+            return CreatedAtAction("GetEmployeeModel", new { id = employeeModel.EmployeeID }, employeeModel);
         }
 
         // DELETE: api/Employee/5
@@ -114,7 +114,7 @@ namespace EmployeeRegister.WebApi.Controllers
 
         private bool EmployeeModelExists(int id)
         {
-            return _context.Employees.Any(e => e.EmployeeId == id);
+            return _context.Employees.Any(e => e.EmployeeID == id);
         }
 
         [NonAction]

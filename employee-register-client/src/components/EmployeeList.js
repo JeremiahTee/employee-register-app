@@ -79,12 +79,12 @@ export const EmployeeList = () => {
                   <td>{imageCard(employeeList[3 * i])}</td>
                   <td>
                     {employeeList[3 * i + 1] // display employee for a single td cell
-                      ? imageCard(employeeList[3 * i])
+                      ? imageCard(employeeList[3 * i + 1])
                       : null}
                   </td>
                   <td>
                     {employeeList[3 * i + 2]
-                      ? imageCard(employeeList[3 * i])
+                      ? imageCard(employeeList[3 * i + 2])
                       : null}
                   </td>
                 </tr>
